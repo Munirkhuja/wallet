@@ -18,19 +18,19 @@ type Card struct {
 	Name string
 	Active bool
 }
-type Category string
-type Status string
+type PaymentCategory string
+type PaymentStatus string
 const (
-	StatusOk Status="OK"
-	StatusFail Status="FAIL"
-	StatusInProgress Status="INPROGRESS"
+	PaymentStatusOk PaymentStatus="OK"
+	PaymentStatusFail PaymentStatus="FAIL"
+	PaymentStatusInProgress PaymentStatus="INPROGRESS"
 )
 type Payment struct {
-	ID uint
+	ID string
 	AccountID int64
 	Amount Money
-	Category Category
-	Status Status
+	Category PaymentCategory
+	Status PaymentStatus
 }
 type PaymentSource struct {
 	Type string // 'card'
