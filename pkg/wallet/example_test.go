@@ -3,7 +3,7 @@ package wallet
 import (
 	"reflect"
 	"testing"
-	"github.com/Munirkhuja/bank/v2/pkg/types"
+	"github.com/Munirkhuja/wallet/pkg/types"
 )
 
 func TestService_FindAccountByID(t *testing.T) {
@@ -15,7 +15,7 @@ func TestService_FindAccountByID(t *testing.T) {
 	}
 	service:=Service{nextAccountId: 5,accounts: accounts}
 	expected := &types.Account{ID: 3, Balance: 10_00,Phone: "992928882213"}
-	result,err := service.FindAccountByID(5)
+	result,err := service.FindAccountByID(3)
 	if err==ErrAccountNotFound {
 		t.Error(err)
 		return
