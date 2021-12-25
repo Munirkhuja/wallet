@@ -1,5 +1,5 @@
-module wallet
+module github.com/Munirkhuja/wallet
 
 go 1.17
 
-require github.com/Munirkhuja/bank/v2 v2.0.1
+require github.com/google/uuid v1.3.0 // indirect
