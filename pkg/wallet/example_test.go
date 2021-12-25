@@ -25,18 +25,9 @@ func TestService_Reject(t *testing.T) {
 		{ID: uuid.New().String(),AccountID: 1,Amount: 1_000_00, Status: types.PaymentStatusOk},
 	}	
 	service:=Service{nextAccountId: 5,accounts: accounts,payments: payments}
-	expected := &types.Payment{ID: uuidTest,AccountID: 2,Amount: 30_00, Status: types.PaymentStatusFail}
-	result,err := service.Reject(uuidTest)
-	if err==ErrAccountNotFound {
-		t.Error(err)
-		return
-	}
-	if err==ErrPaymentNotFound {
-		t.Error(err)
-		return
-	}
-	if !reflect.DeepEqual(result,expected) {
-		t.Errorf("invalid result, expected: %v actual: %v",expected,result)
+	result := service.Reject(uuidTest)
+	if result!=nil {
+		t.Errorf("invalid result, %v",result)
 	}
 }
 func TestService_FindAccountByID(t *testing.T) {
