@@ -22,7 +22,15 @@ var testPayments=[]*types.Payment{
 	{ID: uuid.New().String(),AccountID: 2,Amount: 90_00, Status: types.PaymentStatusFail},
 	{ID: uuid.New().String(),AccountID: 1,Amount: 1_000_00, Status: types.PaymentStatusOk},
 }
-var testServices=Service{nextAccountId: 5,accounts: testAccounts,payments: testPayments}
+
+var testFavorites=[]*types.Favorite{
+	{ID: uuid.New().String(),AccountID: 2,Amount: 30_00, Name: "GOOD"},
+	{ID: uuid.New().String(),AccountID: 6,Amount: 3_00,  Name: "GOOD"},
+	{ID: uuid.New().String(),AccountID: 1,Amount: 10_00, Name: "GOOD" },
+	{ID: uuid.New().String(),AccountID: 2,Amount: 30_00,  Name: "GOOD"},
+	{ID: uuid.New().String(),AccountID: 4,Amount: 15_00,  Name: "GOOD"},
+}
+var testServices=Service{nextAccountId: 5,accounts: testAccounts,payments: testPayments,favorite: testFavorites}
 func TestService_Reject_success_loc(t *testing.T) {		
 	s:=testServices
 	payment:=testPayments[0]
@@ -144,4 +152,52 @@ func TestService_Repeat_account_not_found_loc(t *testing.T) {
 	if err!=ErrAccountNotFound {
 		t.Errorf("invalid result, %v",err)
 	}	
+}
+func TestFavoritePayment_success_loc(t *testing.T) {
+	s:=testServices	
+	payment:=testPayments[0]
+	_,err := s.FavoritePayment(payment.ID,"test add")
+	if err!= nil {
+		t.Errorf("invalid result,  %v",err)
+	}
+}
+func TestFavoritePayment_fail_loc(t *testing.T) {
+	s:=testServices	
+	_,err := s.FavoritePayment(uuid.New().String(),"test add")
+	if err!= ErrPaymentNotFound {
+		t.Errorf("invalid result,  %v",err)
+	}
+}
+func TestPayFromFavorite_success_loc(t *testing.T) {
+	s:=testServices	
+	favorite:=testFavorites[2]
+	_,err := s.PayFromFavorite(favorite.ID)
+	if err!= nil {
+		t.Errorf("invalid result,  %v",err)
+	}
+}
+func TestPayFromFavorite_fail_loc(t *testing.T) {
+	s:=testServices	
+	favorite:=testFavorites[1]
+	_,err := s.PayFromFavorite(favorite.ID)
+	if err!=ErrAccountNotFound {
+		t.Errorf("invalid result, %v",err)
+	}	
+}
+func TestFindFavoriteByID_succes_loc(t *testing.T) {	
+	s:=testServices	
+	favorite:=testFavorites[2]
+	expected := favorite
+	result,_ := s.FindFavoriteByID(favorite.ID)
+	if !reflect.DeepEqual(result,expected) {
+		t.Errorf("invalid result, expected: %v actual: %v",expected,result)
+	}
+}
+func TestFindFavoriteByID_fail_loc(t *testing.T) {
+	s:=testServices
+	_,err := s.FindFavoriteByID(uuid.New().String())
+	if err!=ErrFavoriteNotFound {
+		t.Error(err)
+	}
+	
 }
